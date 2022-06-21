@@ -16,7 +16,7 @@ export default function PostsRoute() {
     const { posts } = useLoaderData() as LoaderData
 
     return (
-        <main className="m-8">
+        <main>
             <h1 className="mb-4 text-4xl text-blue-800">Posts</h1>
             <Link to="admin" className="text-red-600 underline">
                 Admin

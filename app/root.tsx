@@ -11,12 +11,14 @@ import {
     Outlet,
     Scripts,
     ScrollRestoration,
+    useLoaderData,
 } from '@remix-run/react'
 
 // import defaultTailwindStyles from './styles/root.css'
 import tailwindStylesheetUrl from './styles/tailwind.css'
 
 import { getUser } from './session.server'
+import { getEnv } from './env.server'
 
 export const links: LinksFunction = () => {
     return [
@@ -33,15 +35,21 @@ export const meta: MetaFunction = () => ({
 
 type LoaderData = {
     user: Awaited<ReturnType<typeof getUser>>
+    ENV: ReturnType<typeof getEnv>
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
+    // console.log(`Server has ENV: ${JSON.stringify(ENV)}`)
     return json<LoaderData>({
         user: await getUser(request),
+        ENV: getEnv(),
     })
 }
 
 export default function App() {
+    // console.log(`Client has ENV: ${JSON.stringify(ENV)}`)
+    const data = useLoaderData()
+
     return (
         <html lang="en" className="h-full">
             <head>
@@ -49,9 +57,16 @@ export default function App() {
                 <Links />
             </head>
             <body className="h-full">
-                <Outlet />
+                <div className="m-4">
+                    <Outlet />
+                </div>
                 <ScrollRestoration />
                 <Scripts />
+                <script
+                    dangerouslySetInnerHTML={{
+                        __html: `window.ENV = ${JSON.stringify(data.ENV)}`,
+                    }}
+                />
                 <LiveReload />
             </body>
         </html>
