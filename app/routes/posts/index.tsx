@@ -18,6 +18,9 @@ export default function PostsRoute() {
     return (
         <main className="m-8">
             <h1 className="mb-4 text-4xl text-blue-800">Posts</h1>
+            <Link to="admin" className="text-red-600 underline">
+                Admin
+            </Link>
             {posts.map(post => (
                 <li key={post.slug}>
                     <Link to={post.slug} className="text-blue-600 underline">
